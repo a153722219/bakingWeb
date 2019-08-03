@@ -118,7 +118,7 @@
 
 <style lang="less">
 	.topBg {
-		width: 750px;
+		width: 100%;
 		height: 324px;
 		background-image: url(../assets/listen-banner.png);
 		position: relative;
@@ -179,7 +179,7 @@
 		}
 
 		.player {
-			width: 684px;
+			width:100%;
 			height: 120px;
 			background: rgba(246, 247, 247, 1);
 			margin-top: 42px;
