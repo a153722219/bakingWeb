@@ -4,8 +4,7 @@ import router from './router'
 import store from './store'
 import 'lib-flexible'
 import './assets/main.less'
-
-
+import './assets/flex.less'
 
 Vue.config.productionTip = false
 
