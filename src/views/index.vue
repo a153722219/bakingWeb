@@ -1,58 +1,41 @@
 <template>
 	<div>
 		<!-- 顶部 -->
-		<div class="topBg">
-			<div class="back"></div>
+		<div class="topBg" :style="{'background-image':'url('+baseURL+detail.lecturerImageUrl+')'}">
+			<div class="back" @click="navigateBack"></div>
 		</div>
 
 		<!-- 标题 -->
 		<div class="container">
 			<h3 class="title">
-				如何经营好一家门店？
+				{{detail.courseName}}
 			</h3>
 			<div class="infoBox fx-row fx-row-center">
 				<div class="left fx-row fx-row-center">
-					<img class="avatar" src="../assets/logo.png" alt="">
-					<div class="mtitle">博尊课程</div>
+					<img class="avatar" :src="baseURL+detail.lecturerImageUrl" alt="">
+					<div class="mtitle">{{detail.courseName}}</div>
 				</div>
 				<div class="right">
-					<button class="goClass">进入课程</button>
+					<button class="goClass" @click="navigateBack">进入课程</button>
 				</div>
 			</div>
 			<!-- 播放器 -->
 			<div class="player fx-row fx-row-center">
 				<img class="playerAvatar" src="../assets/redplay.png" alt="">
 				<div class="playerInfo fx-column fx-col-space-around">
-					<div class="playerTitle">
-						如何经营好一家门店？
+					<div class="playerTitle single-line">
+						{{detail.title}}
 					</div>
 					<div class="playerTime">
-						11:23
+						<!-- 11:23 -->
+						{{" "}}
 					</div>
 				</div>
 			</div>
 			<!-- 主体 -->
 
-			<div class="bodyContainer">
+			<div class="bodyContainer" v-html="detail.introduce">
 
-
-				店铺的管理，店铺的管理好于坏直接或间接的影响店铺的销售。店铺的经营管理主要包括：店面的布置、商品的管理、店铺推广、销售和售后，下面我们逐一介绍应注意的问题。
-
-				1：店面的布置
-
-				　　店面的布置主要是首页整体的规划，店铺首页是整体展现商品等信息给客户的第一感觉，店主应给据商品服务等信息第一时间展现在客户的眼前，不要让客户点几下鼠标才可以看到。要注意一下几点：
-
-				　　A：整洁大方体现一定的特色，不能一味追求花哨好看，考虑大众的眼球。有的店铺打开以后只见满屏幕图片再跳什么也看不看，眼睛都睁不开。
-
-				　　B：方便与浏览和查找。不要客户在你的店铺看商品还需要“技术性操作”
-
-				　　C：第一时间展现主要商品，有限的页面要合理运用。不要让你的客户第一眼看到大部分是无关紧要的图片和信息。（建议找一些商品陈列的知识看一下）
-
-				2：商品的管理
-
-				　　商品管理主要商品的摆放、商品更新、这直接关系到客户对你的商铺信任的影响，没有客户喜欢扎乱无章，在众多的商品遨游却找不到需要商品。店主要在商品管理上要注意那几个方面呢？
-
-				　　A：商品分类商品分类是客户快速查找商品的途径。好的商品分类有助于客户快速的查找。怎么样对商品分类呢？在这里给大家一个建议作为查考，如果得商品品牌杂乱，每一个品牌商品少的情况下应采取类别分类如：上衣、裤子、祛斑、补水等这样别类有利于客户的查寻。如果每一个品牌有一定的数量类别相对单一建议使用以品牌分类。
 
 			</div>
 			
@@ -62,27 +45,27 @@
 			</h3>
 			<div class="recommendBox">
 				
-				<div v-for="i in 3" class="item fx-row fx-row-start">
+				<div v-for="(item,index) in detail.recommendedCourse" :key="index"  @click="details(item.id,item.type)" class="item fx-row fx-row-start">
 					<div class="avatarbox">
-						<img src="../assets/h1.png" alt="">
+						<img :src="baseURL+item.imageUrlList[0].fileUrl" alt="">
 						<div class="tip">
-							音频
+							{{item.type==1?'音频':'视频'}}
 						</div>
 					</div>
 					<div class="info fx-column fx-row-space-around">
-						<div class="title">
-							《烘焙情书》看透烘焙的魔力
+						<div class="title single-line" style="max-width: 100%;">
+							{{item.courseName}}
 						</div>
-						<div class="mtitle">
-							教你打造垄断企业
+						<div class="mtitle single-line" style="max-width: 100%;">
+							{{item.courseIntro}}
 						</div>
-						<div class="smtitle">
-							硅谷创业教父披得•哲学笔记
+						<div class="smtitle single-line" style="max-width: 100%;">
+							{{item.courseSummarize}}
 						</div>
 						
 						<div class="fx-row fx-row-space-between">
-							<span class="price">30讲/￥79.00</span>
-							<span class="peoNum">652人加入学习</span>
+							<span class="price">{{item.totalExpect}}讲//{{item.price==0?'免费':'￥'+item.price}}</span>
+							<span class="peoNum">{{item.studyCount || 0}}人加入学习</span>
 						</div>
 					</div>
 					
@@ -102,16 +85,42 @@
 	export default {
 		data() {
 			return {
-
+				id:null,
+				detail:{},
 			}
 		},
 		methods: {
-			name() {
-
+			navigateBack() {
+				uni.navigateBack();
+			},
+			details(id,type){
+				if(type==1){
+					uni.navigateTo({
+						url: "/pages/list/index?id="+id
+					});
+				}else{
+					uni.navigateTo({
+						url: "/pages/videoList/index?id="+id
+					});
+				}
 			}
 		},
 		mounted() {
-
+			
+			this.id = this.$route.query.id;
+			this.$store.commit("setToken",this.$route.query.token);
+			//获取数据
+			
+			this.$http.get('/public/getVideoDetails?courseSectionFileId='+this.id,{courseSectionFileId:this.id}).then(res=>{
+				console.log(res)
+				this.detail = res.body;
+				
+				// this.list = res.data.body;
+				// uni.setNavigationBarTitle({
+				// 	title:res.data.body.title
+				// });
+			})
+			
 		}
 	}
 </script>
@@ -193,6 +202,7 @@
 			}
 
 			.playerTitle {
+				max-width: 89%;
 				font-size: 30px;
 				font-family: PingFang-SC-Medium;
 				font-weight: 500;
@@ -219,6 +229,9 @@
 			color: rgba(51, 51, 51, 1);
 			line-height: 48px;
 			margin-bottom: 39px;
+			*{
+				max-width: 100%;
+			}
 		}
 		.recommendBox{
 			margin-top: 16px;
