@@ -35,8 +35,7 @@
 			<!-- 主体 -->
 
 			<div class="bodyContainer" v-html="detail.introduce">
-
-
+				<!-- <a href="/play">dasdasfsdaf</a> -->
 			</div>
 			
 			<!-- 推荐 -->
@@ -64,7 +63,7 @@
 						</div>
 						
 						<div class="fx-row fx-row-space-between">
-							<span class="price">{{item.totalExpect}}讲//{{item.price==0?'免费':'￥'+item.price}}</span>
+							<span class="price">{{item.totalExpect}}讲/{{item.price==0?'免费':'￥'+item.price}}</span>
 							<span class="peoNum">{{item.studyCount || 0}}人加入学习</span>
 						</div>
 					</div>
@@ -75,7 +74,16 @@
 			
 			
 		</div>
-
+		
+		<input type="text" v-model="str" id="foo" style="display: none;">
+		
+		<!-- 复制工具条 -->
+		<div class="toolbar fx-row" :class="{'fadeIn':showToolBar}">
+			<div class="item" @click="clickHandle(0)">记笔记</div>
+			<button class="item btnCopy" data-clipboard-action="copy" data-clipboard-target="#foo">复制</button>
+			<!-- <div class="item" @click="clickHandle(1)">复制</div> -->
+			<div class="item" @click="clickHandle(2)">分享</div>
+		</div>
 	</div>
 
 
@@ -87,6 +95,8 @@
 			return {
 				id:null,
 				detail:{},
+				showToolBar:false,
+				str:""
 			}
 		},
 		methods: {
@@ -103,9 +113,39 @@
 						url: "/pages/videoList/index?id="+id
 					});
 				}
+			},
+			clickHandle(index){
+				console.log(this.str)
+				if(index==0){
+					
+					
+					
+				}else{
+					
+					
+				}
+				
 			}
+			
 		},
+		
+		
+		
+		
 		mounted() {
+			  var clipboard = new Clipboard('.btnCopy');
+
+			clipboard.on('success', function(e) {
+				console.log(e);
+				 window.getSelection().removeAllRanges();
+				
+			});
+
+			clipboard.on('error', function(e) {
+				console.log(e);
+			});
+
+		
 			
 			this.id = this.$route.query.id;
 			this.$store.commit("setToken",this.$route.query.token);
@@ -114,18 +154,60 @@
 			this.$http.get('/public/getVideoDetails?courseSectionFileId='+this.id,{courseSectionFileId:this.id}).then(res=>{
 				console.log(res)
 				this.detail = res.body;
+				document.onselectionchange = function(){
+					const str = document.getSelection()+"";
+					
+					if(str==""){
+						this.showToolBar=false;
+					}else{
+						this.showToolBar=true;
+					}
+					this.str = str;
+				}.bind(this)
 				
-				// this.list = res.data.body;
-				// uni.setNavigationBarTitle({
-				// 	title:res.data.body.title
-				// });
-			})
+				
+			});
+			
 			
 		}
 	}
 </script>
 
 <style lang="less">
+	
+
+	
+	.toolbar{
+		position: fixed;
+		height: 100px;
+		width: 80%;
+		left: 50%;
+		transform: translateX(-50%);
+		bottom:-300px;
+		border-radius: 15px;
+		background: #f6f7f7;
+		box-sizing: border-box;
+		padding: 20px 0;
+		transition: .8s;
+		opacity: 0;
+		&.fadeIn{
+			bottom:150px;
+			opacity: 1;
+		}
+		
+		.item{
+			width: 33%;
+			background: #f6f7f7;
+			color: #EA4728;
+			text-align: center;
+			line-height: 60px;
+			height: 60px;
+			&:not(:nth-last-of-type(0)){
+				border-left: 1px solid #ccc;
+			}
+		}
+	}
+	
 	.topBg {
 		width: 100%;
 		height: 324px;
