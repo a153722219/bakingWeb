@@ -44,7 +44,7 @@
 			</h3>
 			<div class="recommendBox">
 				
-				<div v-for="(item,index) in detail.recommendedCourse" :key="index"  @click="details(item.id,item.type)" class="item fx-row fx-row-start">
+				<div v-for="(item,index) in detail.recommendedCourse" :key="index"  @click.stop="details(item.id,item.type)" class="item fx-row fx-row-start">
 					<div class="avatarbox">
 						<img :src="baseURL+item.imageUrlList[0].fileUrl" alt="">
 						<div class="tip">
@@ -75,14 +75,14 @@
 			
 		</div>
 		
-		<input type="text" v-model="str" id="foo" style="display: none;">
+		<!-- <input type="text" v-model="str" id="foo" style="display: none;"> -->
 		
 		<!-- 复制工具条 -->
 		<div class="toolbar fx-row" :class="{'fadeIn':showToolBar}">
-			<div class="item" @click="clickHandle(0)">记笔记</div>
-			<button class="item btnCopy" data-clipboard-action="copy" data-clipboard-target="#foo">复制</button>
-			<!-- <div class="item" @click="clickHandle(1)">复制</div> -->
-			<div class="item" @click="clickHandle(2)">分享</div>
+			<div class="item" @click.stop="clickHandle(0)">记笔记</div>
+			<!-- <button class="item btnCopy" data-clipboard-action="copy" data-clipboard-target="#foo">复制</button> -->
+			<div class="item" @click.stop="clickHandle(1)">复制</div>
+			<div class="item" @click.stop="clickHandle(2)">分享</div>
 		</div>
 	</div>
 
@@ -116,12 +116,18 @@
 			},
 			clickHandle(index){
 				console.log(this.str)
+				
 				if(index==0){
 					
-					
+					location.href="/qksmessage?action=note&text="+this.str
+					uni.navigateTo({
+						url:'/pages/newNote/newNote?text='+this.str
+					});
+				}else if(index==1){
+					location.href="/qksmessage?action=copy&text="+this.str
 					
 				}else{
-					
+					location.href="/qksmessage?action=share&text="+this.str
 					
 				}
 				
@@ -133,20 +139,7 @@
 		
 		
 		mounted() {
-			  var clipboard = new Clipboard('.btnCopy');
 
-			clipboard.on('success', function(e) {
-				console.log(e);
-				 window.getSelection().removeAllRanges();
-				
-			});
-
-			clipboard.on('error', function(e) {
-				console.log(e);
-			});
-
-		
-			
 			this.id = this.$route.query.id;
 			this.$store.commit("setToken",this.$route.query.token);
 			//获取数据
@@ -158,11 +151,15 @@
 					const str = document.getSelection()+"";
 					
 					if(str==""){
-						this.showToolBar=false;
+						setTimeout(()=>{
+							this.showToolBar=false;
+							this.str = str;
+						},500)
 					}else{
 						this.showToolBar=true;
+						this.str = str;
 					}
-					this.str = str;
+				
 				}.bind(this)
 				
 				
@@ -174,7 +171,15 @@
 </script>
 
 <style lang="less">
-	
+	.container,.toolbar,.topBg{
+		user-select: none;
+		-webkit-user-select: none;
+	}
+	.bodyContainer{
+		user-select: text;
+		-webkit-user-select: text;
+	}
+
 
 	
 	.toolbar{
@@ -188,8 +193,9 @@
 		background: #f6f7f7;
 		box-sizing: border-box;
 		padding: 20px 0;
-		transition: .8s;
+		transition: .5s;
 		opacity: 0;
+		z-index: 9999;
 		&.fadeIn{
 			bottom:150px;
 			opacity: 1;
@@ -202,7 +208,7 @@
 			text-align: center;
 			line-height: 60px;
 			height: 60px;
-			&:not(:nth-last-of-type(0)){
+			&:not(:nth-last-child(0)){
 				border-left: 1px solid #ccc;
 			}
 		}
