@@ -21,7 +21,8 @@
 			</div>
 			<!-- 播放器 -->
 			<div class="player fx-row fx-row-center">
-				<img class="playerAvatar" src="../assets/redplay.png" alt="">
+				<img class="playerAvatar" v-if="!isPlaying" @click="play" src="../assets/redplay.png" alt="">
+				<img class="playerAvatar" v-else @click="reset" src="../assets/red-puase.png" alt="">
 				<div class="playerInfo fx-column fx-col-space-around">
 					<div class="playerTitle single-line">
 						{{detail.title}}
@@ -96,10 +97,24 @@
 				id:null,
 				detail:{},
 				showToolBar:false,
-				str:""
+				str:"",
+				isPlaying:false
 			}
 		},
 		methods: {
+			play(){
+				this.isPlaying=true;
+				location.href="/qksmessage?action=play&courseId="+this.detail.courseId+"&sId="+this.id
+			},
+			reset(){
+				this.isPlaying=false;
+				location.href="/qksmessage?action=pause&courseId="+this.detail.courseId+"&sId="+this.id
+			},
+			
+			pause(){
+				this.isPlaying=false;
+			},
+			
 			navigateBack() {
 				uni.navigateBack();
 			},
@@ -119,7 +134,7 @@
 				
 				if(index==0){
 					
-					location.href="/qksmessage?action=note&text="+this.str
+					// location.href="/qksmessage?action=note&text="+this.str
 					uni.navigateTo({
 						url:'/pages/newNote/newNote?text='+this.str
 					});
@@ -139,14 +154,16 @@
 		
 		
 		mounted() {
-
+			window.vms = this;
 			this.id = this.$route.query.id;
 			this.$store.commit("setToken",this.$route.query.token);
+			this.isPlaying = this.$route.query.playing==1;
 			//获取数据
 			
 			this.$http.get('/public/getVideoDetails?courseSectionFileId='+this.id,{courseSectionFileId:this.id}).then(res=>{
-				console.log(res)
+				console.log(JSON.stringify(res))
 				this.detail = res.body;
+				
 				document.onselectionchange = function(){
 					const str = document.getSelection()+"";
 					
