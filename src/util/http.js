@@ -7,7 +7,7 @@ api.get = function(url,params){
 	return request({
 	    url,
 	    method: 'get',
-	    data:params
+	    params
 	  })
 	
 }
