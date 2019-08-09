@@ -18,7 +18,6 @@ api.post = function(url,params){
 	    method: 'post',
 	    data:params
 	  })
-	
 }
 
 export default api;

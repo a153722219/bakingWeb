@@ -3,6 +3,7 @@
 		<!-- 顶部 -->
 		<div class="topBg" :style="{'background-image':'url('+baseURL+detail.lecturerImageUrl+')'}">
 			<div class="back" @click="navigateBack"></div>
+			<div class="share"></div>
 		</div>
 		<!-- 标题 -->
 		<div class="container">
@@ -170,7 +171,6 @@
 		background-image: url(../assets/listen-banner.png);
 		position: relative;
 		background-size: 100% 100%;
-
 		.back {
 			width: 18px;
 			height: 32px;
@@ -180,11 +180,20 @@
 			top: 67px;
 			left: 34px;
 		}
+		
+		.share {
+			width: 32px;
+			height: 32px;
+			background-image: url(../assets/share.png);
+			background-size: 100% 100%;
+			position: absolute;
+			top: 67px;
+			right: 34px;
+		}
 	}
 
 	.container {
 		padding: 35px;
-
 		.title {
 			font-size: 42px;
 			font-family: PingFang-SC-Medium;
@@ -196,7 +205,6 @@
 			margin-top: 44px;
 			padding-bottom: 25px;
 			border-bottom: 1px solid rgba(230, 230, 230, 1);
-
 			.avatar {
 				width: 60px;
 				height: 60px;
@@ -273,7 +281,6 @@
 		}
 		.recommendBox{
 			margin-top: 16px;
-			
 			.item{
 				padding: 30px 0;
 				border-bottom: 1px solid rgba(230,230,230,1);

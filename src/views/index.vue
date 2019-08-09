@@ -3,6 +3,7 @@
 		<!-- 顶部 -->
 		<div class="topBg" :style="{'background-image':'url('+baseURL+detail.lecturerImageUrl+')'}">
 			<div class="back" @click="navigateBack"></div>
+			<div class="share"></div>
 		</div>
 		<!-- 标题 -->
 		<div class="container">
@@ -117,6 +118,7 @@
 			navigateBack() {
 				uni.navigateBack();
 			},
+			
 			details(id,type){
 				if(type==1){
 					uni.navigateTo({
@@ -128,6 +130,7 @@
 					});
 				}
 			},
+			
 			clickHandle(index){
 				console.log(this.str)
 				
@@ -245,6 +248,16 @@
 			position: absolute;
 			top: 67px;
 			left: 34px;
+		}
+		
+		.share {
+			width: 32px;
+			height: 32px;
+			background-image: url(../assets/share.png);
+			background-size: 100% 100%;
+			position: absolute;
+			top: 67px;
+			right: 34px;
 		}
 	}
 
