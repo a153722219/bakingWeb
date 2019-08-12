@@ -21,8 +21,8 @@
 			</div>
 			<!-- 播放器 -->
 			<div class="player fx-row fx-row-center">
-				<img class="playerAvatar" v-if="!isPlaying" @click="play" src="../assets/redplay.png" alt="">
-				<img class="playerAvatar" v-else @click="reset" src="../assets/red-puase.png" alt="">
+				<img class="playerAvatar" v-if="!isPlaying" @click="navigateBack" src="../assets/redplay.png" alt="">
+				<img class="playerAvatar" v-else @click="navigateBack" src="../assets/red-puase.png" alt="">
 				<div class="playerInfo fx-column fx-col-space-around">
 					<div class="playerTitle single-line">
 						{{detail.title}}
@@ -78,13 +78,7 @@
 		
 		<!-- <input type="text" v-model="str" id="foo" style="display: none;"> -->
 		
-		<!-- 复制工具条 -->
-		<div class="toolbar fx-row" :class="{'fadeIn':showToolBar}">
-			<div class="item" @click.stop="clickHandle(0)">记笔记</div>
-			<!-- <button class="item btnCopy" data-clipboard-action="copy" data-clipboard-target="#foo">复制</button> -->
-			<div class="item" @click.stop="clickHandle(1)">复制</div>
-			<div class="item" @click.stop="clickHandle(2)">分享</div>
-		</div>
+
 	</div>
 
 
@@ -102,51 +96,7 @@
 			}
 		},
 		methods: {
-			play(){
-				this.isPlaying=true;
-				location.href="/qksmessage?action=play&courseId="+this.detail.courseId+"&sId="+this.id
-			},
-			reset(){
-				this.isPlaying=false;
-				location.href="/qksmessage?action=pause&courseId="+this.detail.courseId+"&sId="+this.id
-			},
-			
-			pause(){
-				this.isPlaying=false;
-			},
-			
-			navigateBack() {
-				uni.navigateBack();
-			},
-			
-			details(id,type){
-				if(type==1){
-					uni.navigateTo({
-						url: "/pages/list/index?id="+id
-					});
-				}else{
-					uni.navigateTo({
-						url: "/pages/videoList/index?id="+id
-					});
-				}
-			},
-			
-			clickHandle(index){
-				console.log(this.str)
-				
-				if(index==0){
-					
-					// location.href="/qksmessage?action=note&text="+this.str
-					uni.navigateTo({
-						url:'/pages/newNote/newNote?text='+this.str
-					});
-				}else if(index==1){
-					location.href="/qksmessage?action=copy&text="+this.str
-					
-				}else{
-					location.href="/qksmessage?action=share&text="+this.str
-					
-				}
+			navigateBack(){
 				
 			}
 			
@@ -156,32 +106,14 @@
 		
 		
 		mounted() {
-			window.vms = this; //挂到window 用于evalJS
-			this.id = this.$route.query.id;
-			this.$store.commit("setToken",this.$route.query.token);
-			this.isPlaying = this.$route.query.playing==1;
+		
+			this.id = this.$route.query.id || 15;
+		
 			//获取数据
 			
-			this.$http.get('/public/getVideoDetails?courseSectionFileId='+this.id,{courseSectionFileId:this.id}).then(res=>{
+			this.$http.get('/public/getVideoDetails',{courseSectionFileId:this.id}).then(res=>{
 			
 				this.detail = res.body;
-				
-				document.onselectionchange = function(){
-					const str = document.getSelection()+"";
-					
-					if(str==""){
-						setTimeout(()=>{
-							this.showToolBar=false;
-							this.str = str;
-						},500)
-					}else{
-						this.showToolBar=true;
-						this.str = str;
-					}
-				
-				}.bind(this)
-				
-				
 			});
 			
 			
@@ -239,7 +171,6 @@
 		background-image: url(../assets/listen-banner.png);
 		position: relative;
 		background-size: 100% 100%;
-
 		.back {
 			width: 18px;
 			height: 32px;
@@ -263,7 +194,6 @@
 
 	.container {
 		padding: 35px;
-
 		.title {
 			font-size: 42px;
 			font-family: PingFang-SC-Medium;
@@ -275,7 +205,6 @@
 			margin-top: 44px;
 			padding-bottom: 25px;
 			border-bottom: 1px solid rgba(230, 230, 230, 1);
-
 			.avatar {
 				width: 60px;
 				height: 60px;
@@ -352,7 +281,6 @@
 		}
 		.recommendBox{
 			margin-top: 16px;
-			
 			.item{
 				padding: 30px 0;
 				border-bottom: 1px solid rgba(230,230,230,1);

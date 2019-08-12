@@ -7,7 +7,7 @@ api.get = function(url,params){
 	return request({
 	    url,
 	    method: 'get',
-	    data:params
+	    params
 	  })
 	
 }
@@ -18,7 +18,6 @@ api.post = function(url,params){
 	    method: 'post',
 	    data:params
 	  })
-	
 }
 
 export default api;
