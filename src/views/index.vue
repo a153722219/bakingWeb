@@ -96,7 +96,8 @@
 				id:null,
 				detail:{},
 				showToolBar:false,
-				str:""
+				str:"",
+				isPlaying:false
 			}
 		},
 		methods: {
@@ -125,7 +126,7 @@
 					});
 				}else if(index==1){
 					location.href="/qksmessage?action=copy&text="+this.str
-					
+					window.getSelection().removeAllRanges();
 				}else{
 					location.href="/qksmessage?action=share&text="+this.str
 					
