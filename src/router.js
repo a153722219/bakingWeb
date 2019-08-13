@@ -7,9 +7,14 @@ let router = new Router({
   routes: [
     {
       path: '/index',
-      name: '主页',
+      name: '音频详情',
       component: () => import('./views/index')
     },
+	{
+	  path: '/download',
+	  name: '下载烘焙',
+	  component: () => import('./views/download')
+	},
 	 {
 	  path: '/audioDetail',
 	  name: '音频详情',

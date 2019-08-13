@@ -3,7 +3,7 @@
 		<!-- 顶部 -->
 		<div class="topBg" :style="{'background-image':'url('+baseURL+detail.lecturerImageUrl+')'}">
 			<div class="back" @click="navigateBack"></div>
-			<div class="share"></div>
+			<div class="share" @click="showShare"></div>
 		</div>
 		<!-- 标题 -->
 		<div class="container">
@@ -85,12 +85,14 @@
 			<div class="item" @click.stop="clickHandle(1)">复制</div>
 			<div class="item" @click.stop="clickHandle(2)">分享</div>
 		</div>
+		<share-modal ref="share" @share="shareHandle"></share-modal>
 	</div>
 
 
 </template>
 
 <script>
+	import shareModal from "../components/shareModal.vue"
 	export default {
 		data() {
 			return {
@@ -101,6 +103,7 @@
 				isPlaying:false
 			}
 		},
+		components:{shareModal},
 		methods: {
 			play(){
 				this.isPlaying=true;
@@ -110,7 +113,9 @@
 				this.isPlaying=false;
 				location.href="/qksmessage?action=pause&courseId="+this.detail.courseId+"&sId="+this.id
 			},
-			
+			showShare(){
+				this.$refs.share.show()
+			},
 			pause(){
 				this.isPlaying=false;
 			},
@@ -129,6 +134,12 @@
 						url: "/pages/videoList/index?id="+id
 					});
 				}
+			},
+			shareHandle(e){
+				console.log(e)
+				location.href="/qksmessage?action=share&type="+e.type
+				+"&id="+this.detail.id+"&name="+this.detail.courseName+"&image="+this.detail.lecturerImageUrl
+				+"&intro="+this.detail.title
 			},
 			
 			clickHandle(index){

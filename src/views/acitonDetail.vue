@@ -53,7 +53,7 @@
 				<!-- <rich-text :nodes="list.activityPoint"></rich-span>		 -->
 			</div>
         </div>
-        <button class="joins">立即报名</button>
+        <button class="joins" @click="download">立即报名</button>
     </div>
 </template>
 

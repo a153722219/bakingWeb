@@ -2,8 +2,8 @@
 	<div>
 		<!-- 顶部 -->
 		<div class="topBg" :style="{'background-image':'url('+baseURL+detail.lecturerImageUrl+')'}">
-			<div class="back" @click="navigateBack"></div>
-			<div class="share"></div>
+			<div class="back"  @click="download"></div>
+			<div class="share"  @click="download"></div>
 		</div>
 		<!-- 标题 -->
 		<div class="container">
@@ -16,13 +16,13 @@
 					<div class="mtitle">{{detail.courseName}}</div>
 				</div>
 				<div class="right">
-					<button class="goClass" @click="navigateBack">进入课程</button>
+					<button class="goClass"  @click="download">进入课程</button>
 				</div>
 			</div>
 			<!-- 播放器 -->
 			<div class="player fx-row fx-row-center">
-				<img class="playerAvatar" v-if="!isPlaying" @click="navigateBack" src="../assets/redplay.png" alt="">
-				<img class="playerAvatar" v-else @click="navigateBack" src="../assets/red-puase.png" alt="">
+				<img class="playerAvatar" v-if="!isPlaying"  @click="download" src="../assets/redplay.png" alt="">
+				<img class="playerAvatar" v-else  @click="download" src="../assets/red-puase.png" alt="">
 				<div class="playerInfo fx-column fx-col-space-around">
 					<div class="playerTitle single-line">
 						{{detail.title}}
@@ -45,7 +45,7 @@
 			</h3>
 			<div class="recommendBox">
 				
-				<div v-for="(item,index) in detail.recommendedCourse" :key="index"  @click.stop="details(item.id,item.type)" class="item fx-row fx-row-start">
+				<div v-for="(item,index) in detail.recommendedCourse" :key="index"   @click.stop="download" class="item fx-row fx-row-start">
 					<div class="avatarbox">
 						<img :src="baseURL+item.imageUrlList[0].fileUrl" alt="">
 						<div class="tip">

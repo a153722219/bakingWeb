@@ -12,7 +12,7 @@
                         <img  class="avatar"  :src="baseURL+list.lecturerImageUrl"></img>
                         <span>{{list.courseName}}</span>
                     </div>
-                    <div class="course" @click="back">进入课程</div>
+                    <div class="course"  @click="download">进入课程</div>
                 </div>
             </div>
      
@@ -26,7 +26,7 @@
         </h3>
         <div class="recommendBox">
         	
-        	<div v-for="(item,index) in list.recommendedCourse" :key="index"  @click.stop="details(item.id,item.type)" class="item fx-row fx-row-start">
+        	<div v-for="(item,index) in list.recommendedCourse" :key="index"   @click.stop="download" class="item fx-row fx-row-start">
         		<div class="avatarbox">
         			<img :src="baseURL+item.imageUrlList[0].fileUrl" alt="">
         			<div class="tip">

@@ -1,11 +1,11 @@
 import axios from 'axios'
 import store from '../store'
 import router from '../router'
-
+import {baseURL} from "./config"
 // 创建axios实例
 const service = axios.create({
 	//https://bozunbaking.com/baking
-  baseURL: "http://192.168.123.126:8080/baking", // api的base_url
+  baseURL: baseURL+"/baking", // api的base_url
   timeout: 5000 // 请求超时时间
 });
 
