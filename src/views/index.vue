@@ -140,6 +140,7 @@
 				location.href="/qksmessage?action=share&type="+e.type
 				+"&id="+this.detail.id+"&name="+this.detail.courseName+"&image="+this.detail.lecturerImageUrl
 				+"&intro="+this.detail.title
+				+"&shareType=0"
 			},
 			
 			clickHandle(index){
@@ -155,7 +156,7 @@
 					location.href="/qksmessage?action=copy&text="+this.str
 					
 				}else{
-					location.href="/qksmessage?action=share&text="+this.str
+					location.href="/qksmessage?action=share1&text="+this.str
 					
 				}
 				

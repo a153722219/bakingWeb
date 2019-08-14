@@ -16,14 +16,19 @@ let router = new Router({
 	  component: () => import('./views/download')
 	},
 	 {
-	  path: '/audioDetail',
+	  path: '/audioShareDetail',
 	  name: '音频详情',
-	  component: () => import('./views/audioDetail')
+	  component: () => import('./views/audioShareDetail')
 	},
-	 {
+	{
 	  path: '/videoDetail',
 	  name: '视频详情',
 	  component: () => import('./views/videoDetail')
+	},
+	 {
+	  path: '/videoShareDetail',
+	  name: '视频详情',
+	  component: () => import('./views/videoShareDetail')
 	},
 	 {
 	  path: '/acitonDetail',

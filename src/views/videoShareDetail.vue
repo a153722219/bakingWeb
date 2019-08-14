@@ -1,9 +1,15 @@
 <template>
     <div class="content">
 		 <div class="audio-model">
-			 <div class="back" @click.stop="navigateBack"></div>
-			 <div class="share" @click.stop="showShare"></div>
-		     <video id="myVideo" :src="baseURL+list.videoUrl" :poster="baseURL+list.lecturerImageUrl" controls></video>
+			 <div class="back" @click.stop="download"></div>
+			 <div class="share" @click.stop="download"></div>
+			 <img :src="baseURL+list.lecturerImageUrl"  class="top"></img>
+			 <div class="mask fx-row fx-row-center">
+				 <div class="btn" @click="download">
+					 下载APP观看视频
+				 </div>
+			 </div>
+		   <!-- <video :src="baseURL+list.videoUrl" controls></video> -->
 		</div>
         <!-- <image :src="baseURL+list.lecturerImageUrl"  class="top"></image> -->
         <div class="main">
@@ -14,7 +20,7 @@
                         <img  class="avatar"  :src="baseURL+list.lecturerImageUrl"></img>
                         <span>{{list.courseName}}</span>
                     </div>
-                    <div class="course"   @click="navigateBack">进入课程</div>
+                    <div class="course"  @click="download">进入课程</div>
                 </div>
             </div>
      
@@ -28,7 +34,7 @@
         </h3>
         <div class="recommendBox">
         	
-        	<div v-for="(item,index) in list.recommendedCourse" :key="index"   @click.stop="details(item.id,item.type)" class="item fx-row fx-row-start">
+        	<div v-for="(item,index) in list.recommendedCourse" :key="index"   @click.stop="download" class="item fx-row fx-row-start">
         		<div class="avatarbox">
         			<img :src="baseURL+item.imageUrlList[0].fileUrl" alt="">
         			<div class="tip">
@@ -53,108 +59,34 @@
         		</div>
         		
         	</div>
-        
-			
+        	
         </div>
-		<!-- 复制工具条 -->
-		<div class="toolbar fx-row" :class="{'fadeIn':showToolBar}">
-			<div class="item" @click.stop="clickHandle(0)">记笔记</div>
-			<!-- <button class="item btnCopy" data-clipboard-action="copy" data-clipboard-target="#foo">复制</button> -->
-			<div class="item" @click.stop="clickHandle(1)">复制</div>
-			<div class="item" @click.stop="clickHandle(2)">分享</div>
-		</div>
-		<share-modal ref="share" @share="shareHandle"></share-modal>
     </div>
 </template>
 
 <script>
-    import shareModal from "../components/shareModal.vue"
+    // import recommend from '@/components/recommend'
     export default {
         name: "index",
       
 		data(){
 			return {
 				list:[],
-				id:null,
-				showToolBar:false,
-				str:"",
+				id:null
+			
 			}
 		},
-		components:{shareModal},
 		mounted(options){
 			this.id = this.$route.query.id || 18;
-			this.$store.commit("setToken",this.$route.query.token);
 			
 			this.$http.get('/public/getVideoDetails',{courseSectionFileId:this.id}).then(res=>{
 			
 				this.list = res.body;
-				document.onselectionchange = function(){
-					const str = document.getSelection()+"";
-					
-					if(str==""){
-						setTimeout(()=>{
-							this.showToolBar=false;
-							this.str = str;
-						},500)
-					}else{
-						this.showToolBar=true;
-						this.str = str;
-					}
-				
-				}.bind(this);
-				
-					
-				document.getElementById("myVideo").onended=()=>{
-					
-					console.log("视频播放结束")
-					location.href="/qksmessage?action=endPlay"
-				}
-				
 			});
 		},
 		
 		methods:{
-			details(id,type){
-				if(type==1){
-					uni.navigateTo({
-						url: "/pages/list/index?id="+id
-					});
-				}else{
-					uni.navigateTo({
-						url: "/pages/videoList/index?id="+id
-					});
-				}
-			},
-			
-			navigateBack() {
-				uni.navigateBack();
-			},
-			showShare(){
-				this.$refs.share.show()
-			},
-			shareHandle(e){
-				console.log(e)
-				location.href="/qksmessage?action=share&type="+e.type
-				+"&id="+this.list.id+"&name="+this.list.courseName+"&image="+this.list.lecturerImageUrl
-				+"&intro="+this.list.title
-				+"&shareType=1"
-			},
-			clickHandle(index){
-				console.log(this.str)
-				
-				if(index==0){
-					
-					// location.href="/qksmessage?action=note&text="+this.str
-					uni.navigateTo({
-						url:'/pages/newNote/newNote?text='+this.str
-					});
-				}else if(index==1){
-					location.href="/qksmessage?action=copy&text="+this.str
-					
-				}else{
-					location.href="/qksmessage?action=share1&text="+this.str
-					
-				}
+			back(){
 				
 			}
 			
@@ -164,39 +96,6 @@
 </script>
 
 <style lang="less">
-	
-	.toolbar{
-		position: fixed;
-		height: 100px;
-		width: 80%;
-		left: 50%;
-		transform: translateX(-50%);
-		bottom:-300px;
-		border-radius: 15px;
-		background: #f6f7f7;
-		box-sizing: border-box;
-		padding: 20px 0;
-		transition: .5s;
-		opacity: 0;
-		z-index: 9999;
-		&.fadeIn{
-			bottom:150px;
-			opacity: 1;
-		}
-		
-		.item{
-			width: 33%;
-			background: #f6f7f7;
-			color: #EA4728;
-			text-align: center;
-			line-height: 60px;
-			height: 60px;
-			&:not(:nth-last-child(0)){
-				border-left: 1px solid #ccc;
-			}
-		}
-	}
-	
     .content{
 		overflow: hidden;
         color:#333;
@@ -264,34 +163,47 @@
         /* height:120px; */
         margin-top: 42px;
         /* background:#F6F7F7; */
-		position:relative;
-		
-		
-		.back {
-			width: 50px;
-			height: 50px;
-			background-image: url(../assets/white-back.png);
-			background-size: 18px 32px;
-			background-repeat: no-repeat;
-			position: absolute;
-			top: 67px;
-			left: 34px;z-index: 999;
-		}
-		
-		.share {
-			width: 32px;
-			height: 32px;
-			background-image: url(../assets/share.png);
-			background-size: 100% 100%;
-			position: absolute;
-			top: 67px;
-			right: 34px;
-			z-index: 999;
-		}
+      .back {
+      	width: 50px;
+      	height: 50px;
+      	background-image: url(../assets/white-back.png);
+      	background-size: 18px 32px;
+      	background-repeat: no-repeat;
+      	position: absolute;
+      	top: 67px;
+      	left: 34px;z-index: 999;
+      }
+	  .mask{
+		  height:442px;
+		  width: 100%;
+		  position: absolute;
+		  top: 0;
+		  left: 0;
+		  background: rgba(0,0,0,0.3);
+		  z-index: 998;
+		  .btn{
+			  background: #EA4728;
+			  color: white;
+			  margin: 0 auto;
+			  padding: 15px;
+			  font-size: 23px;
+			  border-radius: 15px;
+		  }
+	  }
       
+      .share {
+      	width: 32px;
+      	height: 32px;
+      	background-image: url(../assets/share.png);
+      	background-size: 100% 100%;
+      	position: absolute;
+      	top: 67px;
+      	right: 34px;
+      	z-index: 999;
+      }
     }
 	
-	.audio-model video{
+	.audio-model img{
 		height:400px;
 		width:100%;
 	}
