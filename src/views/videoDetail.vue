@@ -23,10 +23,10 @@
             </div>
         </div>
         <!-- 推荐 -->
-        <h3 class="title">
+        <h3 class="title" v-if="list.recommendedCourse">
         	相关推荐
         </h3>
-        <div class="recommendBox">
+        <div class="recommendBox" v-if="list.recommendedCourse">
         	
         	<div v-for="(item,index) in list.recommendedCourse" :key="index"   @click.stop="details(item.id,item.type)" class="item fx-row fx-row-start">
         		<div class="avatarbox">
@@ -78,37 +78,74 @@
 				id:null,
 				showToolBar:false,
 				str:"",
+				courseId:null,
+				studyPlanId:null
 			}
 		},
 		components:{shareModal},
 		mounted(options){
-			this.id = this.$route.query.id || 18;
+			this.id = this.$route.query.id;
+			this.courseId = this.$route.query.courseId;
+			this.studyPlanId = this.$route.query.studyPlanId;
 			this.$store.commit("setToken",this.$route.query.token);
+			
+			
+			document.getElementById("myVideo").onended=()=>{
+				if(this.id && this.studyPlanId){
+					location.href="/qksmessage?action=endPlay&id="+this.id+"&studyPlanId="+this.studyPlanId;
+					console.log(`修改${this.studyPlanId}_${this.id}的学习状态...`)
+				}else{
+					console.log(`未加入学习计划或者是试听课程不修改...`)
+				}
+					
+			}
+			
+			
+			document.onselectionchange = function(){
+				const str = document.getSelection()+"";
+				
+				if(str==""){
+					setTimeout(()=>{
+						this.showToolBar=false;
+						this.str = str;
+					},500)
+				}else{
+					this.showToolBar=true;
+					this.str = str;
+				}
+			
+			}.bind(this);
+			
+			
+			if(this.id===undefined){
+				//试听
+				this.$http.get('/public/getCourseDetails',{courseId:this.courseId}).then(res=>{
+					res = res.body;
+					this.list = {
+						courseId:this.courseId,
+						videoUrl:res.preconditionUrl,
+						title:res.preconditionTitle,
+						courseName:res.courseName,
+						lecturerImageUrl:res.lecturerImageUrl,
+						introduce:res.courseIntro
+					}
+					
+					
+					
+					console.log(res)
+					
+				})
+				
+				
+			
+				return;
+			}
+			
+			//非试听
 			
 			this.$http.get('/public/getVideoDetails',{courseSectionFileId:this.id}).then(res=>{
 			
 				this.list = res.body;
-				document.onselectionchange = function(){
-					const str = document.getSelection()+"";
-					
-					if(str==""){
-						setTimeout(()=>{
-							this.showToolBar=false;
-							this.str = str;
-						},500)
-					}else{
-						this.showToolBar=true;
-						this.str = str;
-					}
-				
-				}.bind(this);
-				
-					
-				document.getElementById("myVideo").onended=()=>{
-					
-					console.log("视频播放结束")
-					location.href="/qksmessage?action=endPlay"
-				}
 				
 			});
 		},
@@ -130,6 +167,10 @@
 				uni.navigateBack();
 			},
 			showShare(){
+				if(!this.id){
+					plus.nativeUI.toast("试听课程暂不支持分享");
+					return 
+				}
 				this.$refs.share.show()
 			},
 			shareHandle(e){
@@ -137,7 +178,7 @@
 				location.href="/qksmessage?action=share&type="+e.type
 				+"&id="+this.list.id+"&name="+this.list.courseName+"&image="+this.list.lecturerImageUrl
 				+"&intro="+this.list.title
-				+"&shareType=1"
+				+"&courseId="+this.courseId
 			},
 			clickHandle(index){
 				console.log(this.str)

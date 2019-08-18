@@ -174,7 +174,7 @@
 			this.isPlaying = this.$route.query.playing==1;
 			//获取数据
 			
-			this.$http.get('/public/getVideoDetails?courseSectionFileId='+this.id,{courseSectionFileId:this.id}).then(res=>{
+			this.$http.get('/public/getVideoDetails',{courseSectionFileId:this.id}).then(res=>{
 			
 				this.detail = res.body;
 				

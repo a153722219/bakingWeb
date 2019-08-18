@@ -29,7 +29,7 @@ axios.defaults.transformRequest = [function (data) {
 // request拦截器
 service.interceptors.request.use(config => {
   //拦截器
- if(store.getters.token)
+ if(store.state.token)
     config.headers['Authorization']=store.state.token;
   return config
 }, error => {
