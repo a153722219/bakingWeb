@@ -187,7 +187,7 @@
 					
 					// location.href="/qksmessage?action=note&text="+this.str
 					uni.navigateTo({
-						url:'/pages/newNote/newNote?text='+this.str
+						url:'/pages/newNote/newNote?text='+encodeURIComponent(this.str)+"&courseSectionFileId="+this.id
 					});
 				}else if(index==1){
 					location.href="/qksmessage?action=copy&text="+this.str
