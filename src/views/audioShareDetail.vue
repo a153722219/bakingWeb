@@ -114,6 +114,7 @@
 			this.$http.get('/public/getVideoDetails',{courseSectionFileId:this.id}).then(res=>{
 			
 				this.detail = res.body;
+				this.detail.introduce = this.detail.introduce.replace(/<img/g,'<img style="max-width:100%;"').replace(/&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1/g,"")
 			});
 			
 			

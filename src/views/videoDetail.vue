@@ -3,7 +3,7 @@
 		 <div class="audio-model">
 			 <div class="back" @click.stop="navigateBack"></div>
 			 <div class="share" @click.stop="showShare"></div>
-		     <video id="myVideo" :src="baseURL+list.videoUrl" :poster="baseURL+list.lecturerImageUrl" controls></video>
+		     <video id="myVideo" :src="baseURL+list.videoUrl" controls controlslist="nodownload" :poster="baseURL+list.lecturerImageUrl"></video>
 		</div>
         <!-- <image :src="baseURL+list.lecturerImageUrl"  class="top"></image> -->
         <div class="main">
@@ -79,21 +79,21 @@
 				showToolBar:false,
 				str:"",
 				courseId:null,
-				studyPlanId:null
+				studyPlanRelId:null
 			}
 		},
 		components:{shareModal},
 		mounted(options){
 			this.id = this.$route.query.id;
 			this.courseId = this.$route.query.courseId;
-			this.studyPlanId = this.$route.query.studyPlanId;
+			this.studyPlanRelId = this.$route.query.studyPlanRelId;
 			this.$store.commit("setToken",this.$route.query.token);
 			
 			
 			document.getElementById("myVideo").onended=()=>{
-				if(this.id && this.studyPlanId){
-					location.href="/qksmessage?action=endPlay&id="+this.id+"&studyPlanId="+this.studyPlanId;
-					console.log(`修改${this.studyPlanId}_${this.id}的学习状态...`)
+				if(this.studyPlanRelId){
+					location.href="/qksmessage?action=endPlay&id="+this.id+"&studyPlanRelId="+this.studyPlanRelId;
+					console.log(`修改${this.studyPlanRelId}的学习状态...`)
 				}else{
 					console.log(`未加入学习计划或者是试听课程不修改...`)
 				}
@@ -146,7 +146,7 @@
 			this.$http.get('/public/getVideoDetails',{courseSectionFileId:this.id}).then(res=>{
 			
 				this.list = res.body;
-				
+				this.list.introduce = this.list.introduce.replace(/<img/g,'<img style="max-width:100%;"').replace(/&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1/g,"")
 			});
 		},
 		
@@ -179,6 +179,7 @@
 				+"&id="+this.list.id+"&name="+this.list.courseName+"&image="+this.list.lecturerImageUrl
 				+"&intro="+this.list.title
 				+"&courseId="+this.courseId
+				+"&shareType=1"
 			},
 			clickHandle(index){
 				console.log(this.str)
