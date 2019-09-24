@@ -1,9 +1,9 @@
 <template>
     <div class="content">
 		 <div class="audio-model">
-			 <div class="back" @click.stop="navigateBack"></div>
-			 <div class="share" @click.stop="showShare"></div>
-		     <video id="myVideo" :src="baseURL+list.videoUrl" controls controlslist="nodownload" :poster="baseURL+list.lecturerImageUrl"></video>
+			<!-- <div class="back" @click.stop="navigateBack"></div>
+			 <div class="share" @click.stop="showShare"></div> -->
+		     <video id="myVideo" playsinline :src="baseURL+list.videoUrl" controls controlslist="nodownload" :poster="baseURL+list.lecturerImageUrl"></video>
 		</div>
         <!-- <image :src="baseURL+list.lecturerImageUrl"  class="top"></image> -->
         <div class="main">
@@ -84,6 +84,7 @@
 		},
 		components:{shareModal},
 		mounted(options){
+			window.vms = this; //挂到window 用于evalJS
 			this.id = this.$route.query.id;
 			this.courseId = this.$route.query.courseId;
 			this.studyPlanRelId = this.$route.query.studyPlanRelId;
@@ -147,6 +148,22 @@
 			
 				this.list = res.body;
 				this.list.introduce = this.list.introduce.replace(/<img/g,'<img style="max-width:100%;"').replace(/&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1/g,"")
+			});
+		
+			//全屏处理 安卓
+			var self = plus.webview.currentWebview();  
+			self.setStyle({  
+				videoFullscreen: 'landscape'  
+			});
+			
+			var  videoElem = document.getElementById("myVideo")
+			// 全屏处理IOS 监听的事件与Android平台有很大区别  
+			videoElem.addEventListener('webkitbeginfullscreen', function() {  
+				plus.screen.lockOrientation('landscape'); //锁死屏幕方向为横屏  
+			});  
+			videoElem.addEventListener('webkitendfullscreen', function() {  
+			//  plus.screen.unlockOrientation(); //解除屏幕方向的锁定，但是不一定是竖屏；  
+				plus.screen.lockOrientation('portrait'); //锁死屏幕方向为竖屏  
 			});
 		},
 		
@@ -304,7 +321,7 @@
         /*border:1px solid red;*/
         display: flex;
         /* height:120px; */
-        margin-top: 42px;
+        // margin-top: 42px;
         /* background:#F6F7F7; */
 		position:relative;
 		
@@ -358,6 +375,9 @@
     .text{
         margin-top: 56px;
         font-size: 28px;
+		max-height: calc(100vh - 639px - 55px);
+		overflow-y: scroll;
+	
 		*{
 			max-width: 100%;
 		}
