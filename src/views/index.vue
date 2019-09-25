@@ -156,8 +156,10 @@
 					location.href="/qksmessage?action=copy&text="+this.str
 					
 				}else{
-					location.href="/qksmessage?action=share1&text="+this.str
-					
+					// location.href="/qksmessage?action=share1&text="+this.str
+					uni.navigateTo({
+						url:'/pages/newNote/newNote?text='+encodeURIComponent(this.str)+"&courseSectionFileId="+this.id
+					});
 				}
 				
 			}
