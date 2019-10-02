@@ -2,8 +2,8 @@
 	<div>
 		<!-- 顶部 -->
 		<div class="topBg" :style="{'background-image':'url('+baseURL+detail.lecturerImageUrl+')'}">
-			<div class="back" @click="navigateBack"></div>
-			<div class="share" @click="showShare"></div>
+		<!-- 	<div class="back" @click="navigateBack"></div>
+			<div class="share" @click="showShare"></div> -->
 		</div>
 		<!-- 标题 -->
 		<div class="container">
@@ -251,7 +251,7 @@
 	
 	.topBg {
 		width: 100%;
-		height: 324px;
+		height: 500px;
 		background-image: url(../assets/listen-banner.png);
 		position: relative;
 		background-size: 100% 100%;

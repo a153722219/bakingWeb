@@ -365,7 +365,7 @@
     }
 	
 	.audio-model video{
-		height:400px;
+		height:500px;
 		width:100%;
 	}
 

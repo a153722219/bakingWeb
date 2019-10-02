@@ -168,7 +168,7 @@
 	
 	.topBg {
 		width: 100%;
-		height: 324px;
+		height: 500px;
 		background-image: url(../assets/listen-banner.png);
 		position: relative;
 		background-size: 100% 100%;

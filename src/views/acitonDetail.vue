@@ -110,11 +110,11 @@
     }
 
     .banner{
-        height:518px;
+        height:500px;
     }
 
     .swiper{
-        height:518px
+        height:500px
     }
 
     .time{
