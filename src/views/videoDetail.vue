@@ -299,7 +299,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-top: 61px;
+        margin-top: 30px;
     }
 
     .i-name{
@@ -387,7 +387,7 @@
     }
 
     .text{
-        margin-top: 56px;
+        margin-top: 20px;
         font-size: 28px;
 		max-height: calc(100vh - 639px - 55px);
 		overflow-y: scroll;
